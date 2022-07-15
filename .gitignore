@@ -1,0 +1,8 @@
+/node_modules
+/database
+/.env
+/dump
+credentials.json
+token.json
+/routes/credentials.json
+/routes/token.json
