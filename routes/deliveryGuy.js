@@ -13,32 +13,8 @@ const auth = require("../middleware/deliveryguyauth");
 
 //===========ROUTES==================================
 
-/**
- * @swagger
- * tags:
- *   name: DeliveryGuy
- * components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- */
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/test:
- *    get:
- *      summary: check if user router is configured correctly
- *      tags: [DeliveryGuy]
- *      responses:
- *        "200":
- *          description: Test successfull
- *          content:
- *            text/html:
- *              [SUCCESS]: deliveryGuy routes connected!
- */
+
 
 router.get("/test", (req, res) => {
   res.status(200);
@@ -61,66 +37,7 @@ router.get("/", superAdminAuth, async (req, res) => {
 
 //Route to create deliveryGuy. Requires superadmin authentication
 
-/**
- * @swagger
- * path:
- *  /deliveryguy:
- *    post:
- *      summary: create a new deliveryguy
- *      tags: [DeliveryGuy]
- *
- *      requestBody:
- *        description: needs all the info about the deliveryguy
- *        required: true
- *
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - super
- *                - restaurant
- *              properties:
- *                super:
- *                 type: object
- *                 properties:
- *                   username:
- *                     type: string
- *                   password:
- *                     type: string
- *                     format: password
- *                deliveryGuy:
- *                  type: object
- *                  required:
- *                    - name
- *                    - phone
- *                    - username
- *                    - password
- *                  properties:
- *                    name:
- *                      type: string
- *                    phone:
- *                      type: string
- *                    username:
- *                      type: string
- *                    password:
- *                      type: string
- *                      description: minimum length of password must be 7
- *              example:
- *                super:
- *                  username: admin
- *                  password: password
- *                deliveryGuy:
- *                  name: deliveryGuy 1
- *                  phone: 8889998899
- *                  username: dguy1
- *                  password: "12345678"
- *      responses:
- *        "201":
- *          description: deliveryGuy Created
- *        "500":
- *          description: internal server error occured
- */
+
 
 router.post("/", superAdminAuth, async (req, res) => {
   const deliveryGuy = new DeliveryGuy(req.body.deliveryGuy);
@@ -135,88 +52,7 @@ router.post("/", superAdminAuth, async (req, res) => {
 
 //Route to get details o forder for which delivery guy is not assigned
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/notify:
- *    get:
- *      summary: Route to get details of orders for which the deliveryguy is not assigned yet
- *      tags: [DeliveryGuy]
- *      security:
- *        - bearerAuth: []
- *
- *      responses:
- *        "200":
- *          description: Details Successfully fetched
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  restaurant:
- *                    type: object
- *                    properties:
- *                      _id:
- *                        type: string
- *                        description: ObjectId of Restaurant
- *                      name:
- *                        type: string
- *                        description: Name of the Restaurant
- *                  user:
- *                    type: object
- *                    properties:
- *                      _id:
- *                        type: string
- *                        description: ObjectId of User
- *                      name:
- *                         type: string
- *                         description: Name of the User
- *                  deliveryGuy:
- *                    type: object
- *                    properties:
- *                      _id:
- *                        type: string
- *                  address:
- *                    type: string
- *                  payment:
- *                    type: object
- *                    properties:
- *                      status:
- *                        type: string
- *                        description: Payment status of the order i.e. "UNPAID", "PAID"
- *                      total:
- *                        type: number
- *                        description: Total amount of the order to be paid
- *                      method:
- *                        type: string
- *                        description: Mode of payment i.e. "COD", "UPI", "CARD"
- *                  status:
- *                    type: string
- *                    decription: Status of the order i.e. "RECIEVED", "LEFT", "DELIVERED", "CANCELED"
- *                  _id:
- *                    type: string
- *                    description: ObjectId of Order
- *                  foods:
- *                    type: array
- *                    items:
- *                      type: object
- *                      properties:
- *                        quantity:
- *                          type: number
- *                          description:
- *                        _id:
- *                          type: string
- *                          description: ObjectId of Food
- *                        price:
- *                          type: number
- *                          description: Price of the food
- *                        name:
- *                          type: string
- *                          description: Name of the Food
- *
- *        "500":
- *          description: An error occured
- */
+
 
 router.get("/notify", auth, async (req, res) => {
   try {
@@ -230,26 +66,7 @@ router.get("/notify", auth, async (req, res) => {
 
 //Route for assign deliveryGuy
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/assign/{id}:
- *    post:
- *      summary: Route to assign deliveryguy
- *      tags: [DeliveryGuy]
- *      security:
- *        - bearerAuth: []
- *      parameters:
- *        - in: path
- *          name: id
- *      description: order id is to be mentioned in params for which deliveryguy is to be assigned
- *    responses:
- *      "200":
- *        description: Whole order object is returned as response
- *      "400":
- *        description: An error occured
- *
- */
+
 
 router.post("/assign/:id", auth, async (req, res) => {
   try {
@@ -277,54 +94,7 @@ router.post("/assign/:id", auth, async (req, res) => {
 
 //Login Route for deliveryGuy
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/login:
- *    post:
- *      summary: login a deliveryGuy
- *      tags: [DeliveryGuy]
- *
- *      requestBody:
- *        description: needs deliveryGuy username and password
- *        required: true
- *
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - password
- *                - username
- *              properties:
- *                username:
- *                  type: string
- *                password:
- *                  type: string
- *                  format: password
- *              example:
- *                username: dguy1
- *                password: "12345678"
- *
- *      responses:
- *        "200":
- *          description: logged in
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                required:
- *                  - password
- *                  - username
- *                properties:
- *                  user:
- *                    type: object
- *                  token:
- *                    type: string
- *
- *        "400":
- *          description: An error occured
- */
+
 
 router.post("/login", async (req, res) => {
   try {
@@ -341,23 +111,7 @@ router.post("/login", async (req, res) => {
 
 //Logout route for deliveryGuy
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/logout:
- *    post:
- *      security:
- *        - bearerAuth: []
- *      summary: logout a deliveryGuy, while using it here, please copy the token from the login route and add it to authorize button on top
- *      tags: [DeliveryGuy]
- *      responses:
- *        "200":
- *          description: logged out
- *        "400":
- *          description: please authenticate
- *        "401":
- *          $ref: '#/components/responses/UnauthorizedError'
- */
+
 
 router.post("/logout", auth, async (req, res) => {
   try {
@@ -374,23 +128,7 @@ router.post("/logout", auth, async (req, res) => {
 
 //Route to logout all sessions
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/logoutAll:
- *    post:
- *      security:
- *        - bearerAuth: []
- *      summary: logout a deliveryGuy from All devices, while using it here, please copy the token from the login route and add it to authorize button on top
- *      tags: [DeliveryGuy]
- *      responses:
- *        "200":
- *          description: logged out
- *        "400":
- *          description: please authenticate
- *        "500":
- *          description: internal server error
- */
+
 
 router.post("/logoutAll", auth, async (req, res) => {
   try {
@@ -404,113 +142,7 @@ router.post("/logoutAll", auth, async (req, res) => {
 
 //Route to read deliveryGuy profile
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/me:
- *    get:
- *      security:
- *        - bearerAuth: []
- *      summary: read the deliveryGuy profile
- *      tags: [DeliveryGuy]
- *      responses:
- *        "200":
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  orders:
- *                    type: object
- *                    properties:
- *                      restaurant:
- *                        type: object
- *                        properties:
- *                          _id:
- *                            type: string
- *                            description: ObjectId of Restaurant
- *                          name:
- *                            type: string
- *                            description: Name of the Restaurant
- *                          contactNos:
- *                            type: array
- *                            items:
- *                              type: string
- *                            description: array of all the contact nos of restaurant
- *                      user:
- *                        type: object
- *                        properties:
- *                          _id:
- *                            type: string
- *                            description: ObjectId of User
- *                          name:
- *                            type: string
- *                            description: Name of the User
- *                      deliveryGuy:
- *                        type: object
- *                        properties:
- *                          _id:
- *                            type: string
- *                            description: Object Id of deliveryGuy
- *                          name:
- *                            type: string
- *                            description: Name of the deliveryGuy
- *                          phone:
- *                            type: string
- *                            description: Phone number of deliveryGuy
- *                      address:
- *                        type: string
- *                        description: address where the food is to be delivered
- *                      payment:
- *                        type: object
- *                        properties:
- *                          status:
- *                            type: string
- *                            description: Payment status of the order i.e. "UNPAID", "PAID"
- *                          total:
- *                            type: number
- *                            description: Total amount of the order to be paid
- *                          method:
- *                            type: string
- *                            description: Mode of payment i.e. "COD", "UPI", "CARD"
- *                      status:
- *                        type: string
- *                        description: Status of the order i.e. "RECIEVED", "LEFT", "DELIVERED", "CANCELED"
- *                      _id:
- *                        type: string
- *                        description: ObjectId of Order
- *                      foods:
- *                        type: array
- *                        items:
- *                          type: object
- *                          properties:
- *                            quantity:
- *                              type: number
- *                              description: Quantity of the food
- *                            _id:
- *                              type: string
- *                              description: ObjectId of Food
- *                            price:
- *                              type: number
- *                              description: Price of the food
- *                            name:
- *                              type: string
- *                              description: Name of the Food
- *                  _id:
- *                    type: string
- *                    description: objectID of DelivryGuy
- *                  username:
- *                    type: string
- *                    description: Username of deliveryGuy
- *                  name:
- *                    type: string
- *                    description: Name of deliveryGuy
- *                  phone:
- *                    type: string
- *                    description: Phone no of deliveryGuy
- *        "400":
- *         description: Please Authenticate
- */
+
 router.get("/me", auth, async (req, res) => {
   const user = req.user;
   const orders = await user.populate("orders").execPopulate();
@@ -519,44 +151,7 @@ router.get("/me", auth, async (req, res) => {
 
 //Update route for delivery guy
 
-/**
- * @swagger
- * path:
- *  /deliveryguy/me:
- *    patch:
- *      security:
- *        - bearerAuth: []
- *      summary: update the deliveryGUy profile
- *      tags: [DeliveryGuy]
- *      requestBody:
- *        description: needs info to be upated about the deliveryGuy
- *        required: true
- *
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - password
- *                - phone
- *              properties:
- *                password:
- *                  type: string
- *                  format: password
- *                phone:
- *                  type: string
- *              example:
- *                password: "87654321"
- *                phone: "+918602313604"
- *      responses:
- *        "200":
- *          content:
- *            application/json:
- *              user:
- *                type: object
- *        "400":
- *         description: Please Authenticate
- */
+
 
 router.patch("/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
@@ -633,25 +228,7 @@ router.get('/all',superAdminAuth,async(req, res)=>{
 })
 
 //Route to update order status
-/**
- * @swagger
- * path:
- *   /deliveryguy/status/{id}:
- *     patch:
- *       summary: Route to update order status to "SHIPPED"
- *       security:
- *         - bearerAuth: []
- *       tags: [DeliveryGuy]
- *       parameters:
- *         - in: path
- *           name: id
- *       responses:
- *         "200":
- *           description: Status Updated to "SHIPPED"
- *         "500":
- *           description: Error
- *
- */
+
 router.patch("/status/:id", auth, async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
@@ -667,25 +244,7 @@ router.patch("/status/:id", auth, async (req, res) => {
 });
 
 //Route to update order status
-/**
- * @swagger
- * path:
- *   /deliveryguy/order/status/delivered/{id}:
- *     patch:
- *       summary: Route to update order status to "delivered"
- *       security:
- *         - bearerAuth: []
- *       tags: [DeliveryGuy]
- *       parameters:
- *         - in: path
- *           name: id
- *       responses:
- *         "200":
- *           description: Status Updated to "DELIVERED"
- *         "500":
- *           description: Error
- *
- */
+
 router.patch("/order/status/:id", auth, async (req, res) => {
   var updatedOrder = {
     status: "DELIVERED"

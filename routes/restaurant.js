@@ -86,20 +86,7 @@ function base64ArrayBuffer(arrayBuffer) {
 
 //=========================== Routes==================================
 
-/**
- * @swagger
- * path:
- *  /restaurant/test:
- *    get:
- *      summary: check if restaurant router is configured correctly
- *      tags: [Restaurant]
- *      responses:
- *        "200":
- *          description: Test successfull
- *          content:
- *            text/html:
- *              [SUCCESS]: Restaurant routes connected!
- */
+
 
 router.get("/test", (req, res) => {
   res.status(200);
@@ -124,41 +111,7 @@ router.get("/test", (req, res) => {
   res.status(200);
   res.send("[SUCCESS]: Restaurant routes connected!");
 });
-/**
- * @swagger
- * tags:
- *   name: Restaurant
 
- */
-
-/**
- * @swagger
- * path:
- *  /restaurant?pageNo=1&size=10:
- *    get:
- *      summary: get a list of all restaurants
- *      tags: [Restaurant]
- *      parameters:
- *        - in: query
- *          name: pageNo
- *          schema:
- *            type: integer
- *          description: the page number
- *        - in: query
- *          name: size
- *          schema:
- *            type: integer
- *          description: The number of items to return
- *      responses:
- *        "200":
- *          description: Gives back all the restaurants
- *          content:
- *            application/json:
- *              schema:
- *              $ref: "#/components/schemas/Restaurant"
- *
- *
- */
 router.get("/", (req, res) => {
   const pageNo = parseInt(req.query.pageNo) || 1;
   const size = parseInt(req.query.size) || 10;
@@ -195,75 +148,7 @@ router.get("/", (req, res) => {
   });
 });
 
-/**
- * @swagger
- * path:
- *  /restaurant:
- *    post:
- *      summary: create a new restaurant
- *      tags: [Restaurant]
- *
- *      requestBody:
- *        description: needs all the info about the restaurant
- *        required: true
- *
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - super
- *                - restaurant
- *              properties:
- *                super:
- *                 type: object
- *                 properties:
- *                   username:
- *                     type: string
- *                   password:
- *                     type: string
- *                     format: password
- *                restaurant:
- *                  type: object
- *                  required:
- *                    - name
- *                    - rest_id
- *                    - contactNos
- *                    - address
- *                    - password
- *                  properties:
- *                    name:
- *                      type: string
- *                    rest_id:
- *                      type: string
- *                    contactNos:
- *                      type: array
- *                      items:
- *                        type: string
- *                      description: array of all the contact no's of the restaurant (each contact no. must be a string)
- *                    address:
- *                      type: string
- *                    password:
- *                      type: string
- *                      description: minimum length of password must be 7
- *              example:
- *                super:
- *                  username: admin
- *                  password: password
- *                restaurant:
- *                  name: Restaurant 1
- *                  rest_id: rest3
- *                  contactNos: ["8602313604"]
- *                  address: Example address, example street, example city...
- *                  password: "12345678"
- *
- *
- *      responses:
- *        "201":
- *          description: DeliveryGuy Created
- *        "500":
- *          description: internal server error occured
- */
+
 
 router.post("/", superAdminAuth, async (req, res) => {
   const restaurant = new Restaurant(req.body.restaurant);
@@ -279,54 +164,7 @@ router.post("/", superAdminAuth, async (req, res) => {
 
 //Login Route for restaurant
 
-/**
- * @swagger
- * path:
- *  /restaurant/login:
- *    post:
- *      summary: login a restaurant
- *      tags: [Restaurant]
- *
- *      requestBody:
- *        description: needs restaurant ID (rest_id) and password
- *        required: true
- *
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - password
- *                - rest_id
- *              properties:
- *                rest_id:
- *                  type: string
- *                password:
- *                  type: string
- *                  format: password
- *              example:
- *                rest_id: rest1
- *                password: "12345678"
- *
- *      responses:
- *        "200":
- *          description: logged in
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                required:
- *                  - password
- *                  - rest_id
- *                properties:
- *                  user:
- *                    type: object
- *                  token:
- *                    type: string
- *
- *        "400":
- *          description: An error occured
- */
+
 router.post("/login", async (req, res) => {
   try {
     const restaurant = await Restaurant.findByCredentials(
@@ -342,23 +180,7 @@ router.post("/login", async (req, res) => {
 
 //Logout route for restaurant
 
-/**
- * @swagger
- * path:
- *  /restaurant/logout:
- *    post:
- *      security:
- *        - bearerAuth: []
- *      summary: logout a restaurant, while using it here, please copy the token from the login route and add it to authorize button on top
- *      tags: [Restaurant]
- *      responses:
- *        "200":
- *          description: logged out
- *        "400":
- *          description: please authenticate
- *        "401":
- *          $ref: '#/components/responses/UnauthorizedError'
- */
+
 
 router.post("/logout", auth, async (req, res) => {
   try {
@@ -375,23 +197,6 @@ router.post("/logout", auth, async (req, res) => {
 
 //Route to logout all sessions
 
-/**
- * @swagger
- * path:
- *  /restaurant/logoutAll:
- *    post:
- *      security:
- *        - bearerAuth: []
- *      summary: logout a restaurant from All devices, while using it here, please copy the token from the login route and add it to authorize button on top
- *      tags: [Restaurant]
- *      responses:
- *        "200":
- *          description: logged out
- *        "400":
- *          description: please authenticate
- *        "500":
- *          description: internal server error
- */
 
 router.post("/logoutAll", auth, async (req, res) => {
   try {
@@ -405,24 +210,6 @@ router.post("/logoutAll", auth, async (req, res) => {
 
 //Route to read restaurant profile
 
-/**
- * @swagger
- * path:
- *  /restaurant/me:
- *    get:
- *      security:
- *        - bearerAuth: []
- *      summary: read the restaurant profile, while using it here, please copy the token from the login route and add it to authorize button on top
- *      tags: [Restaurant]
- *      responses:
- *        "200":
- *          content:
- *            application/json:
- *              user:
- *                type: object
- *        "400":
- *         description: Please Authenticate
- */
 
 router.get("/me", auth, async (req, res) => {
   res.send(req.user);
@@ -430,54 +217,7 @@ router.get("/me", auth, async (req, res) => {
 
 // update route for the restaurant
 
-/**
- * @swagger
- * path:
- *  /restaurant:
- *    patch:
- *      security:
- *        - bearerAuth: []
- *      summary: Update the restaurant profile, while using it here, please copy the token from the login route and add it to authorize button on top
- *      tags: [Restaurant]
- *      requestBody:
- *        description: needs info to be updated
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - name
- *                - password
- *                - address
- *                - contactNos
- *              properties:
- *                name:
- *                  type: string
- *                password:
- *                  type: string
- *                  format: password
- *                address:
- *                  type: string
- *                contactNos:
- *                  type: array
- *                  items:
- *                    type: string
- *                    description: array of all the contact no's of the restaurant (each contact no. must be a string)
- *              example:
- *                name: Restaurant Update
- *                password: testtestupdate
- *                address: test address update
- *                contactNos: ["8889986863","8602313604"]
- *      responses:
- *        "200":
- *          content:
- *            application/json:
- *              user:
- *                type: object
- *        "400":
- *         description: Please Authenticate
- */
+
 router.patch("/", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "password", "address", "contactNos","email"];
@@ -503,108 +243,10 @@ router.patch("/", auth, async (req, res) => {
   }
 });
 
-//Timestamps
-
-// const currentTS = ()=>{
-//   let ts = Date.now();
-//   // timestamp in seconds
-//   console.log( "currentTS- "+ Math.floor(ts/1000));
-
-//   return Math.floor(ts/1000)
-// }
-
-// const orderTS = (str)=>{
-//   var myDate = new Date(str);
-//   var orderts = myDate.getTime();
-//   console.log("OrderTS- " +Math.floor(orderts/1000));
-//   return Math.floor(orderts/1000)
-// }
 
 //Route for notification
 
-/**
- * @swagger
- * path:
- *  /restaurant/notify:
- *    get:
- *      summary: Route to get details of latest orders
- *      tags: [Restaurant]
- *      security:
- *        - bearerAuth: []
- *
- *      responses:
- *        "200":
- *          description: Details Successfully fetched
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  restaurant:
- *                    type: object
- *                    properties:
- *                      _id:
- *                        type: string
- *                        description: ObjectId of Restaurant
- *                      name:
- *                        type: string
- *                        description: Name of the Restaurant
- *                  user:
- *                    type: object
- *                    properties:
- *                      _id:
- *                        type: string
- *                        description: ObjectId of User
- *                      name:
- *                         type: string
- *                         description: Name of the User
- *                      phone:
- *                        type: string
- *                        description: Phone number of the user
- *                  deliveryGuy:
- *                    type: object
- *                    properties:
- *                      _id:
- *                        type: string
- *                  payment:
- *                    type: object
- *                    properties:
- *                      status:
- *                        type: string
- *                        description: Payment status of the order i.e. "UNPAID", "PAID"
- *                      total:
- *                        type: number
- *                        description: Total amount of the order to be paid
- *                      method:
- *                        type: string
- *                        description: Mode of payment i.e. "COD", "UPI", "CARD"
- *                  status:
- *                    type: string
- *                    decription: Status of the order i.e. "RECIEVED", "LEFT", "DELIVERED", "CANCELED"
- *                  _id:
- *                    type: string
- *                    description: ObjectId of Order
- *                  foods:
- *                    type: array
- *                    items:
- *                      type: object
- *                      properties:
- *                        quantity:
- *                          type: number
- *                          description:
- *                        _id:
- *                          type: string
- *                          description: ObjectId of Food
- *                        price:
- *                          type: number
- *                          description: Price of the food
- *                        name:
- *                          type: string
- *                          description: Name of the Food
- *
- *        "500":
- *          description: An error occured
- */
+
 
 router.get("/notify", auth, async (req, res) => {
   try {
@@ -636,44 +278,7 @@ router.get("/notify", auth, async (req, res) => {
 
 // get the details of the restaurant for details page
 
-/**
- * @swagger
- * path:
- *  /restaurant/{id}:
- *    get:
- *      summary: get the restaurant profile for user
- *      tags: [Restaurant]
- *      parameters:
- *        - in: path
- *          name: id
- *      description: restaurant id is taken from the path parameters
- *      responses:
- *        "200":
- *          description: Restaurant Information for user
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  _id:
- *                    type: string
- *                    description: The restaurant object ID.
- *                  address:
- *                    type: string
- *                    description: The restaurant address.
- *                  contactNos:
- *                    type: array
- *                    items:
- *                      type: string
- *                    description: array of contact numbers of restaurants
- *                  foods:
- *                    type: array
- *                    items:
- *                      type: string
- *                    description: array of foods available at the restaurant
- *        "500":
- *          description: No such restaurant found
- */
+
 
 router.get("/:_id", async (req, res) => {
   try {
@@ -702,41 +307,7 @@ router.get("/:_id", async (req, res) => {
 });
 
 // route to add new food
-/**
- * @swagger
- * path:
- *   /restaurant/food:
- *     post:
- *       summary: Add food to the restaurant
- *       tags: [Restaurant]
- *       security:
- *         - bearerAuth: []
- *       requestBody:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - foodid
- *                 - price
- *               properties:
- *                 foodid:
- *                   type: string
- *                   description: Id of the food object
- *                 price:
- *                   type: string
- *                   description: price at which the food is available in the restaurant
- *       responses:
- *         "200":
- *           description: Food added to the restaurant
- *         "404":
- *           description: Food doesn't exists.Please add it first from food routes first
- *         "500":
- *           description: Error
- *
- *
- *
- */
+
 router.post("/food", auth, async (req, res) => {
   try {
     const food = await Food.findById(req.body.foodid);
@@ -763,33 +334,7 @@ router.post("/food", auth, async (req, res) => {
 });
 
 // route to delete food from the restaurant
-/**
- * @swagger
- * path:
- *   /restaurant/food:
- *     delete:
- *       security:
- *         - bearerAuth: []
- *       summary: route to delete food from restaurant, while using it here, please copy the token from the login route(restaurant login) and add it to authorize button on top
- *       tags: [Restaurant]
- *       requestBody:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - foodid
- *               properties:
- *                 foodid:
- *                   type: string
- *                   description: Object Id of the food to be deleted
- *       responses:
- *         "200":
- *           description: Food deleted
- *         "500":
- *           description: Error
- *
- */
+
 router.delete("/food", auth, async (req, res) => {
   try {
     const restaurant = req.user;
@@ -818,29 +363,7 @@ router.delete("/food", auth, async (req, res) => {
 });
 
 //route to upload image of the restaurant
-/**
- * @swagger
- * path:
- *   /restaurant/image:
- *     post:
- *       summary: Route to upload image of the restaurant(File size should not exceed 1 MB)
- *       security:
- *         - bearerAuth: []
- *       required: true
- *       tags: [Restaurant]
- *       requestBody:
- *         content:
- *           image/jpg:
- *             schema:
- *               type: string
- *               format: binary
- *       responses:
- *         "200":
- *           description: Added Restaurant picture successfully
- *         "400":
- *           description: Unable to add restaurant picture
- *
- */
+
 router.post("/image/avatar", auth, upload.single("image"), async (req, res) => {
   try {
     const buffer = await sharp(req.file.buffer)
@@ -869,25 +392,7 @@ router.get('/image/avatar/:id', async (req, res) => {
 })
 
 //Route to update order status
-/**
- * @swagger
- * path:
- *   /restaurant/status/{id}:
- *     patch:
- *       summary: Route to update order status to "LEFT"
- *       security:
- *         - bearerAuth: []
- *       tags: [Restaurant]
- *       parameters:
- *         - in: path
- *           name: id
- *       responses:
- *         "200":
- *           description: Status Updated to "LEFT"
- *         "500":
- *           description: Error
- *
- */
+
 router.patch("/status/:id", auth, async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(

@@ -30,30 +30,12 @@ const TOKEN_PATH = 'token.json';
 // router.use(express.json());
 //=========================== Routes==================================
 
-/**
- * @swagger
- * path:
- *  /food/test:
- *    get:
- *      summary: check if food router is configured correctly
- *      tags: [food]
- *      responses:
- *        "200":
- *          description: Test successfull
- *          content:
- *            text/html:
- *              [SUCCESS]: food routes connected!
- */
+
 router.get("/test", (req, res) => {
   res.status(200);
   res.send("[SUCCESS]: Food routes connected!");
 });
 
-/**
- * @swagger
- * tags:
- *   name: food
- */
 
 //=======================================
 //Function to convert arrayBuffer to base 64
@@ -130,57 +112,7 @@ const getResponse = function (foods) {
 //=============ROUTES====================
 //find food
 
-/**
- * @swagger
- * path:
- *  /food?pageNo=1&size=10:
- *    get:
- *      summary: get list of all available foods
- *      tags: [food]
- *      parameters:
- *        - in: query
- *          name: pageNo
- *          schema:
- *            type: integer
- *          description: the page number
- *        - in: query
- *          name: size
- *          schema:
- *            type: integer
- *          description: The number of items to return
- *
- *      responses:
- *        "200":
- *          description: Get food list successful
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- *                properties:
- *                  foods:
- *                    type: object
- *                items:
- *                  type: object
- *                  properties:
- *                    name:
- *                      type: string
- *                    _id:
- *                      type: string
- *                    restaurants:
- *                      type: array
- *                      items:
- *                        type: object
- *                        properties:
- *                          name:
- *                            type: string
- *                          _id:
- *                            type: string
- *                          price:
- *                            type: string
- *        "500":
- *          description: Error
- *
- */
+
 router.get("/", async (req, res) => {
   try {
     const pageNo = parseInt(req.query.pageNo) || 1;
@@ -214,55 +146,7 @@ router.get("/", async (req, res) => {
 
 //create food
 
-/**
- * @swagger
- * path:
- *   /food:
- *     post:
- *       summary: Route to create food if it already doesn't exists, while using it here, please copy the token from the login route and add it to authorize button on top
- *       security:
- *         - bearerAuth: []
- *       required: true
- *       tags: [food]
- *       requestBody:
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - name
- *                 - price
- *               properties:
- *                 name:
- *                   type: string
- *                   description: Name of the food to be added
- *                 price:
- *                   type: string
- *                   description: Price of added food
- *               example:
- *                 name: Food1
- *                 price: "999"
- *
- *       responses:
- *         "200":
- *           description: Food added
- *           content:
- *             application/json:
- *               schema:
- *                 type: object
- *                 properties:
- *                   foodid:
- *                     type: string
- *                   name:
- *                     type: string
- *                   restaurants:
- *                     type: array
- *                     items:
- *                       type: string
- *         "500":
- *           description: Error
- *
- */
+
 
 function authorize(credentials, callback, next, fields, req, res) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
@@ -374,32 +258,7 @@ const upload = multer({
   },
 });
 
-/**
- * @swagger
- * path:
- *   /food/image/{id}:
- *     post:
- *       summary: Route to upload image of the food(File size should not exceed 1 MB)
- *       security:
- *         - bearerAuth: []
- *       required: true
- *       parameters:
- *         - in: path
- *           name: id
- *       tags: [food]
- *       requestBody:
- *         content:
- *           image/png:
- *             schema:
- *               type: string
- *               format: base64
- *       responses:
- *         "200":
- *           description: Added Food picture successfully
- *         "400":
- *           description: Unable to add food picture
- *
- */
+
 router.post(
   "/image/:id",
   restAuth,
